@@ -17,9 +17,8 @@ import rewards.internal.monitor.jamon.JamonMonitorFactory;
 @Configuration
 public class AspectsConfig {
 
-	@Bean
-	public MonitorFactory monitorFactory(){
-		return new JamonMonitorFactory();
-	}
-	
+    @Bean
+    public MonitorFactory monitorFactory() {
+        return new JamonMonitorFactory();
+    }
 }

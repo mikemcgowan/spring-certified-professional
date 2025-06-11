@@ -1,10 +1,10 @@
 package rewards;
 
+import javax.sql.DataSource;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
-
-import javax.sql.DataSource;
 
 /**
  * TODO-06: Study this configuration class used for testing
@@ -39,7 +39,7 @@ import javax.sql.DataSource;
  * - If your IDE automatically generated a @Test method, rename it
  *   testRewardForDining. Delete any code in the method body.
  * - Otherwise add a testRewardForDining method & annotate it with
- *   @Test (make sure the @Test is from org.junit.jupiter.api.Test ).
+ *   @Test (make sure the @ Test is from org.junit.jupiter.api.Test).
  * - Run the test. If your setup() is working, you get a green bar.
  *
  * TODO-11: Finally run a real test.
@@ -50,20 +50,19 @@ import javax.sql.DataSource;
  * - Run the test - it should pass if you have configured everything
  *   correctly. Congratulations, you are done.
  * - If your test fails - did you miss the import in TO DO 7 above?
- *
  */
 @Configuration
 public class TestInfrastructureConfig {
 
-	/**
-	 * Creates an in-memory "rewards" database populated
-	 * with test data for fast testing
-	 */
-	@Bean
-	public DataSource dataSource() {
-		return (new EmbeddedDatabaseBuilder()) //
-				.addScript("classpath:rewards/testdb/schema.sql") //
-				.addScript("classpath:rewards/testdb/data.sql") //
-				.build();
-	}
+    /**
+     * Creates an in-memory "rewards" database populated
+     * with test data for fast testing
+     */
+    @Bean
+    public DataSource dataSource() {
+        return (new EmbeddedDatabaseBuilder()) //
+                                               .addScript("classpath:rewards/testdb/schema.sql") //
+                                               .addScript("classpath:rewards/testdb/data.sql") //
+                                               .build();
+    }
 }

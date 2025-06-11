@@ -9,20 +9,18 @@ import rewards.internal.account.AccountRepository;
 import rewards.internal.restaurant.RestaurantRepository;
 import rewards.internal.reward.RewardRepository;
 
-
 @Configuration
 @Import(SystemTestConfig.class)
 public class SystemTestRequiresNewConfig {
 
-	@Bean
-	public RewardNetwork rewardNetwork(
-		AccountRepository accountRepository,
-		RestaurantRepository restaurantRepository,
-		RewardRepository rewardRepository ) {
-		return new RewardNetworkImplRequiresNew(
-			accountRepository, 
-			restaurantRepository, 
-			rewardRepository);
-	}
-	
+    @Bean
+    public RewardNetwork rewardNetwork(
+        AccountRepository accountRepository,
+        RestaurantRepository restaurantRepository,
+        RewardRepository rewardRepository) {
+        return new RewardNetworkImplRequiresNew(
+            accountRepository,
+            restaurantRepository,
+            rewardRepository);
+    }
 }

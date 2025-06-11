@@ -1,15 +1,16 @@
 package accounts.web;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.actuate.endpoint.annotation.DeleteOperation;
 import org.springframework.boot.actuate.endpoint.annotation.Endpoint;
 import org.springframework.boot.actuate.endpoint.annotation.ReadOperation;
 import org.springframework.boot.actuate.endpoint.annotation.WriteOperation;
 import org.springframework.stereotype.Component;
-import rewards.internal.restaurant.RestaurantRepository;
 
-import java.util.HashMap;
-import java.util.Map;
+import rewards.internal.restaurant.RestaurantRepository;
 
 @Component
 @Endpoint(id = "restaurant")

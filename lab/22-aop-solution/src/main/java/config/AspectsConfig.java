@@ -9,13 +9,12 @@ import rewards.internal.monitor.MonitorFactory;
 import rewards.internal.monitor.jamon.JamonMonitorFactory;
 
 @Configuration
-@ComponentScan(basePackages="rewards.internal.aspects")
+@ComponentScan(basePackages = "rewards.internal.aspects")
 @EnableAspectJAutoProxy
 public class AspectsConfig {
 
-	@Bean
-	public MonitorFactory monitorFactory(){
-		return new JamonMonitorFactory();
-	}
-	
+    @Bean
+    public MonitorFactory monitorFactory() {
+        return new JamonMonitorFactory();
+    }
 }

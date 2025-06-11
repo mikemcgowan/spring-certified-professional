@@ -46,9 +46,9 @@ import org.junit.platform.commons.support.ReflectionSupport;
  * {@code @CaptureSystemOutput} is a JUnit JUpiter extension for capturing
  * output to {@code System.out} and {@code System.err} with expectations
  * supported via Hamcrest matchers.
- * 
+ *
  * <h4>Example Usage</h4>
- * 
+ *
  * <pre style="code">
  * {@literal @}Test
  * {@literal @}CaptureSystemOutput
@@ -57,7 +57,7 @@ import org.junit.platform.commons.support.ReflectionSupport;
  *
  *     System.out.println("Printed to System.out!");
  * }
- * 
+ *
  * {@literal @}Test
  * {@literal @}CaptureSystemOutput
  * void systemErr(OutputCapture outputCapture) {
@@ -70,175 +70,171 @@ import org.junit.platform.commons.support.ReflectionSupport;
  * <p>Based on code from Spring Boot's
  * <a href="https://github.com/spring-projects/spring-boot/blob/d3c34ee3d1bfd3db4a98678c524e145ef9bca51c/spring-boot-project/spring-boot-tools/spring-boot-test-support/src/main/java/org/springframework/boot/testsupport/rule/OutputCapture.java">OutputCapture</a>
  * rule for JUnit 4 by Phillip Webb and Andy Wilkinson.
- * 
+ *
  * @author Sam Brannen
  * @author Phillip Webb
  * @author Andy Wilkinson
  */
-@Target({ TYPE, METHOD })
+@Target({TYPE, METHOD})
 @Retention(RUNTIME)
 @ExtendWith(CaptureSystemOutput.Extension.class)
 public @interface CaptureSystemOutput {
 
-	class Extension implements BeforeEachCallback, AfterEachCallback, ParameterResolver {
+    class Extension implements BeforeEachCallback, AfterEachCallback, ParameterResolver {
 
-		@Override
-		public void beforeEach(ExtensionContext context) throws Exception {
-			getOutputCapture(context).captureOutput();
-		}
+        @Override
+        public void beforeEach(ExtensionContext context) throws Exception {
+            getOutputCapture(context).captureOutput();
+        }
 
-		@Override
-		public void afterEach(ExtensionContext context) throws Exception {
-			OutputCapture outputCapture = getOutputCapture(context);
-			try {
-				if (!outputCapture.matchers.isEmpty()) {
-					String output = outputCapture.toString();
-					assertThat(output, allOf(outputCapture.matchers));
-				}
-			}
-			finally {
-				outputCapture.releaseOutput();
-			}
-		}
+        @Override
+        public void afterEach(ExtensionContext context) throws Exception {
+            OutputCapture outputCapture = getOutputCapture(context);
+            try {
+                if (!outputCapture.matchers.isEmpty()) {
+                    String output = outputCapture.toString();
+                    assertThat(output, allOf(outputCapture.matchers));
+                }
+            } finally {
+                outputCapture.releaseOutput();
+            }
+        }
 
-		@Override
-		public boolean supportsParameter(ParameterContext parameterContext, ExtensionContext extensionContext) {
-			boolean isTestMethodLevel = extensionContext.getTestMethod().isPresent();
-			boolean isOutputCapture = parameterContext.getParameter().getType() == OutputCapture.class;
-			return isTestMethodLevel && isOutputCapture;
-		}
+        @Override
+        public boolean supportsParameter(ParameterContext parameterContext, ExtensionContext extensionContext) {
+            boolean isTestMethodLevel = extensionContext.getTestMethod()
+                                                        .isPresent();
+            boolean isOutputCapture = parameterContext.getParameter()
+                                                      .getType() == OutputCapture.class;
+            return isTestMethodLevel && isOutputCapture;
+        }
 
-		@Override
-		public Object resolveParameter(ParameterContext parameterContext, ExtensionContext extensionContext) {
-			return getOutputCapture(extensionContext);
-		}
+        @Override
+        public Object resolveParameter(ParameterContext parameterContext, ExtensionContext extensionContext) {
+            return getOutputCapture(extensionContext);
+        }
 
-		private OutputCapture getOutputCapture(ExtensionContext context) {
-			return getOrComputeIfAbsent(getStore(context), OutputCapture.class);
-		}
+        private OutputCapture getOutputCapture(ExtensionContext context) {
+            return getOrComputeIfAbsent(getStore(context), OutputCapture.class);
+        }
 
-		private <V> V getOrComputeIfAbsent(Store store, Class<V> type) {
-			return store.getOrComputeIfAbsent(type, ReflectionSupport::newInstance, type);
-		}
+        private <V> V getOrComputeIfAbsent(Store store, Class<V> type) {
+            return store.getOrComputeIfAbsent(type, ReflectionSupport::newInstance, type);
+        }
 
-		private Store getStore(ExtensionContext context) {
-			return context.getStore(Namespace.create(getClass(), context.getRequiredTestMethod()));
-		}
+        private Store getStore(ExtensionContext context) {
+            return context.getStore(Namespace.create(getClass(), context.getRequiredTestMethod()));
+        }
+    }
 
-	}
+    /**
+     * {@code OutputCapture} captures output to {@code System.out} and {@code System.err}.
+     *
+     * <p>To obtain an instance of {@code OutputCapture}, declare a parameter of type
+     * {@code OutputCapture} in a JUnit Jupiter {@code @Test}, {@code @BeforeEach},
+     * or {@code @AfterEach} method.
+     *
+     * <p>{@linkplain #expect Expectations} are supported via Hamcrest matchers.
+     *
+     * <p>To obtain all output to {@code System.out} and {@code System.err}, simply
+     * invoke {@link #toString()}.
+     *
+     * @author Phillip Webb
+     * @author Andy Wilkinson
+     * @author Sam Brannen
+     */
+    static class OutputCapture {
 
-	/**
-	 * {@code OutputCapture} captures output to {@code System.out} and {@code System.err}.
-	 * 
-	 * <p>To obtain an instance of {@code OutputCapture}, declare a parameter of type
-	 * {@code OutputCapture} in a JUnit Jupiter {@code @Test}, {@code @BeforeEach},
-	 * or {@code @AfterEach} method.
-	 * 
-	 * <p>{@linkplain #expect Expectations} are supported via Hamcrest matchers.
-	 * 
-	 * <p>To obtain all output to {@code System.out} and {@code System.err}, simply
-	 * invoke {@link #toString()}.
-	 *
-	 * @author Phillip Webb
-	 * @author Andy Wilkinson
-	 * @author Sam Brannen
-	 */
-	static class OutputCapture {
+        private final List<Matcher<? super String>> matchers = new ArrayList<>();
 
-		private final List<Matcher<? super String>> matchers = new ArrayList<>();
+        private CaptureOutputStream captureOut;
 
-		private CaptureOutputStream captureOut;
+        private CaptureOutputStream captureErr;
 
-		private CaptureOutputStream captureErr;
+        private ByteArrayOutputStream copy;
 
-		private ByteArrayOutputStream copy;
+        void captureOutput() {
+            this.copy = new ByteArrayOutputStream();
+            this.captureOut = new CaptureOutputStream(System.out, this.copy);
+            this.captureErr = new CaptureOutputStream(System.err, this.copy);
+            System.setOut(new PrintStream(this.captureOut));
+            System.setErr(new PrintStream(this.captureErr));
+        }
 
-		void captureOutput() {
-			this.copy = new ByteArrayOutputStream();
-			this.captureOut = new CaptureOutputStream(System.out, this.copy);
-			this.captureErr = new CaptureOutputStream(System.err, this.copy);
-			System.setOut(new PrintStream(this.captureOut));
-			System.setErr(new PrintStream(this.captureErr));
-		}
+        void releaseOutput() {
+            System.setOut(this.captureOut.getOriginal());
+            System.setErr(this.captureErr.getOriginal());
+            this.copy = null;
+        }
 
-		void releaseOutput() {
-			System.setOut(this.captureOut.getOriginal());
-			System.setErr(this.captureErr.getOriginal());
-			this.copy = null;
-		}
+        private void flush() {
+            try {
+                this.captureOut.flush();
+                this.captureErr.flush();
+            } catch (IOException ex) {
+                // ignore
+            }
+        }
 
-		private void flush() {
-			try {
-				this.captureOut.flush();
-				this.captureErr.flush();
-			}
-			catch (IOException ex) {
-				// ignore
-			}
-		}
+        /**
+         * Verify that the captured output is matched by the supplied {@code matcher}.
+         *
+         * <p>Verification is performed after the test method has executed.
+         *
+         * @param matcher the matcher
+         */
+        public void expect(Matcher<? super String> matcher) {
+            this.matchers.add(matcher);
+        }
 
-		/**
-		 * Verify that the captured output is matched by the supplied {@code matcher}.
-		 *
-		 * <p>Verification is performed after the test method has executed.
-		 *
-		 * @param matcher the matcher
-		 */
-		public void expect(Matcher<? super String> matcher) {
-			this.matchers.add(matcher);
-		}
+        /**
+         * Return all captured output to {@code System.out} and {@code System.err}
+         * as a single string.
+         */
+        @Override
+        public String toString() {
+            flush();
+            return this.copy.toString();
+        }
 
-		/**
-		 * Return all captured output to {@code System.out} and {@code System.err}
-		 * as a single string.
-		 */
-		@Override
-		public String toString() {
-			flush();
-			return this.copy.toString();
-		}
+        private static class CaptureOutputStream extends OutputStream {
 
-		private static class CaptureOutputStream extends OutputStream {
+            private final PrintStream original;
 
-			private final PrintStream original;
+            private final OutputStream copy;
 
-			private final OutputStream copy;
+            CaptureOutputStream(PrintStream original, OutputStream copy) {
+                this.original = original;
+                this.copy = copy;
+            }
 
-			CaptureOutputStream(PrintStream original, OutputStream copy) {
-				this.original = original;
-				this.copy = copy;
-			}
+            PrintStream getOriginal() {
+                return this.original;
+            }
 
-			PrintStream getOriginal() {
-				return this.original;
-			}
+            @Override
+            public void write(int b) throws IOException {
+                this.copy.write(b);
+                this.original.write(b);
+                this.original.flush();
+            }
 
-			@Override
-			public void write(int b) throws IOException {
-				this.copy.write(b);
-				this.original.write(b);
-				this.original.flush();
-			}
+            @Override
+            public void write(byte[] b) throws IOException {
+                write(b, 0, b.length);
+            }
 
-			@Override
-			public void write(byte[] b) throws IOException {
-				write(b, 0, b.length);
-			}
+            @Override
+            public void write(byte[] b, int off, int len) throws IOException {
+                this.copy.write(b, off, len);
+                this.original.write(b, off, len);
+            }
 
-			@Override
-			public void write(byte[] b, int off, int len) throws IOException {
-				this.copy.write(b, off, len);
-				this.original.write(b, off, len);
-			}
-
-			@Override
-			public void flush() throws IOException {
-				this.copy.flush();
-				this.original.flush();
-			}
-
-		}
-
-	}
-
+            @Override
+            public void flush() throws IOException {
+                this.copy.flush();
+                this.original.flush();
+            }
+        }
+    }
 }

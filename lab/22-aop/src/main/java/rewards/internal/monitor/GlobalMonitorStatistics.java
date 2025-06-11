@@ -4,21 +4,21 @@ import java.util.Date;
 
 public interface GlobalMonitorStatistics {
 
-	long getCallsCount();
+    long getCallsCount();
 
-	long getTotalCallTime();
+    long getTotalCallTime();
 
-	Date getLastAccessTime();
+    Date getLastAccessTime();
 
-	long lastCallTime(String methodName);
+    long lastCallTime(String methodName);
 
-	long callCount(String methodName);
+    long callCount(String methodName);
 
-	long averageCallTime(String methodName);
+    long averageCallTime(String methodName);
 
-	long totalCallTime(String methodName);
+    long totalCallTime(String methodName);
 
-	long minimumCallTime(String methodName);
+    long minimumCallTime(String methodName);
 
-	long maximumCallTime(String methodName);
+    long maximumCallTime(String methodName);
 }

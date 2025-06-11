@@ -1,10 +1,11 @@
 package accounts;
 
-import config.AppConfig;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.context.annotation.Import;
+
+import config.AppConfig;
 
 @SpringBootApplication
 @Import(AppConfig.class)
@@ -15,8 +16,7 @@ public class RestWsApplication {
 
         // SpringApplication.run(RestWsApplication.class, args);
         new SpringApplicationBuilder(RestWsApplication.class)
-                .headless(false)
-                .run(args);
-
+            .headless(false)
+            .run(args);
     }
 }

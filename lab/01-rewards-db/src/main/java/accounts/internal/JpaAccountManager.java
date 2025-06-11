@@ -20,90 +20,93 @@ import rewards.internal.account.Account;
 @Repository
 public class JpaAccountManager extends AbstractAccountManager {
 
-	private EntityManager entityManager;
+    private EntityManager entityManager;
 
-	/**
-	 * Creates a new JPA account manager.
-	 * <p>
-	 * Its entityManager will be set automatically by
-	 * {@link #setEntityManager(EntityManager)}.
-	 */
-	public JpaAccountManager() {
-	}
+    /**
+     * Creates a new JPA account manager.
+     * <p>
+     * Its entityManager will be set automatically by
+     * {@link #setEntityManager(EntityManager)}.
+     */
+    public JpaAccountManager() {
+    }
 
-	@PersistenceContext
-	public void setEntityManager(EntityManager entityManager) {
-		this.entityManager = entityManager;
-	}
+    @PersistenceContext
+    public void setEntityManager(EntityManager entityManager) {
+        this.entityManager = entityManager;
+    }
 
-	@Override
-	@Transactional(readOnly = true)
-	@SuppressWarnings("unchecked")
-	public List<Account> getAllAccounts() {
-		List<Account> l = entityManager.createQuery("select a from Account a LEFT JOIN FETCH a.beneficiaries")
-				.getResultList();
+    @Override
+    @Transactional(readOnly = true)
+    @SuppressWarnings("unchecked")
+    public List<Account> getAllAccounts() {
+        List<Account> l = entityManager.createQuery("select a from Account a LEFT JOIN FETCH a.beneficiaries")
+                                       .getResultList();
 
-		// Use of "JOIN FETCH" produces duplicate accounts, and DISTINCT does
-		// not address this. So we have to filter it manually.
-		List<Account> result = new ArrayList<Account>();
+        // Use of "JOIN FETCH" produces duplicate accounts, and DISTINCT does
+        // not address this. So we have to filter it manually.
+        List<Account> result = new ArrayList<Account>();
 
-		for (Account a : l) {
-			if (!result.contains(a))
-				result.add(a);
-		}
+        for (Account a : l) {
+            if (!result.contains(a)) {
+                result.add(a);
+            }
+        }
 
-		return result;
-	}
+        return result;
+    }
 
-	@Override
-	@Transactional(readOnly = true)
-	public Account getAccount(Long id) {
-		Account account = (Account) entityManager.find(Account.class, id);
+    @Override
+    @Transactional(readOnly = true)
+    public Account getAccount(Long id) {
+        Account account = (Account) entityManager.find(Account.class, id);
 
-		if (account != null) {
-			// Force beneficiaries to load too - avoid Hibernate lazy loading error
-			account.getBeneficiaries().size();
-		}
+        if (account != null) {
+            // Force beneficiaries to load too - avoid Hibernate lazy loading error
+            account.getBeneficiaries()
+                   .size();
+        }
 
-		return account;
-	}
+        return account;
+    }
 
-	@Override
-	@Transactional
-	public Account save(Account account) {
-		entityManager.persist(account);
-		return account;
-	}
+    @Override
+    @Transactional
+    public Account save(Account account) {
+        entityManager.persist(account);
+        return account;
+    }
 
-	@Override
-	@Transactional
-	public void update(Account account) {
-		entityManager.merge(account);
-	}
+    @Override
+    @Transactional
+    public void update(Account account) {
+        entityManager.merge(account);
+    }
 
-	@Override
-	@Transactional
-	public void updateBeneficiaryAllocationPercentages(Long accountId, Map<String, Percentage> allocationPercentages) {
-		Account account = getAccount(accountId);
-		for (Entry<String, Percentage> entry : allocationPercentages.entrySet()) {
-			account.getBeneficiary(entry.getKey()).setAllocationPercentage(entry.getValue());
-		}
-	}
+    @Override
+    @Transactional
+    public void updateBeneficiaryAllocationPercentages(Long accountId, Map<String, Percentage> allocationPercentages) {
+        Account account = getAccount(accountId);
+        for (Entry<String, Percentage> entry : allocationPercentages.entrySet()) {
+            account.getBeneficiary(entry.getKey())
+                   .setAllocationPercentage(entry.getValue());
+        }
+    }
 
-	@Override
-	@Transactional
-	public void addBeneficiary(Long accountId, String beneficiaryName) {
-		getAccount(accountId).addBeneficiary(beneficiaryName, Percentage.zero());
-	}
+    @Override
+    @Transactional
+    public void addBeneficiary(Long accountId, String beneficiaryName) {
+        getAccount(accountId).addBeneficiary(beneficiaryName, Percentage.zero());
+    }
 
-	@Override
-	@Transactional
-	public void removeBeneficiary(Long accountId, String beneficiaryName,
-			Map<String, Percentage> allocationPercentages) {
-		getAccount(accountId).removeBeneficiary(beneficiaryName);
+    @Override
+    @Transactional
+    public void removeBeneficiary(Long accountId, String beneficiaryName,
+                                  Map<String, Percentage> allocationPercentages) {
+        getAccount(accountId).removeBeneficiary(beneficiaryName);
 
-		if (allocationPercentages != null)
-			updateBeneficiaryAllocationPercentages(accountId, allocationPercentages);
-	}
-
+        if (allocationPercentages != null) {
+            updateBeneficiaryAllocationPercentages(accountId, allocationPercentages);
+        }
+    }
 }

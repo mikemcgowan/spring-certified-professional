@@ -1,31 +1,37 @@
 package accounts.web;
 
-import accounts.AccountManager;
-import accounts.RestWsApplication;
-import accounts.services.AccountService;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.verify;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
-import common.money.Percentage;
-import config.RestSecurityConfig;
+
+import java.util.Arrays;
+import java.util.List;
+
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.AutoConfigureDataJpa;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
+
+import accounts.AccountManager;
+import accounts.RestWsApplication;
+import accounts.services.AccountService;
+import common.money.Percentage;
+import config.RestSecurityConfig;
 import rewards.internal.account.Account;
-
-import java.util.Arrays;
-import java.util.List;
-
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.BDDMockito.*;
-import static org.mockito.Mockito.verify;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 // TODO-06a: Perform security testing against MVC layer
 // - Take some time to understand what each test is for
@@ -56,7 +62,7 @@ public class AccountControllerTests {
 
     @Test
     @Disabled
-    @WithMockUser( roles = {"USER"})
+    @WithMockUser(roles = {"USER"})
     public void accountDetails_with_USER_role_should_return_200() throws Exception {
 
         // arrange
@@ -66,11 +72,11 @@ public class AccountControllerTests {
         mockMvc.perform(get("/accounts/0"))
                .andExpect(status().isOk())
                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-               .andExpect(jsonPath("name").value("John Doe")).andExpect(jsonPath("number").value("1234567890"));
+               .andExpect(jsonPath("name").value("John Doe"))
+               .andExpect(jsonPath("number").value("1234567890"));
 
         // verify
         verify(accountManager).getAccount(0L);
-
     }
 
     @Test
@@ -85,11 +91,11 @@ public class AccountControllerTests {
         mockMvc.perform(get("/accounts/0"))
                .andExpect(status().isOk())
                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-               .andExpect(jsonPath("name").value("John Doe")).andExpect(jsonPath("number").value("1234567890"));
+               .andExpect(jsonPath("name").value("John Doe"))
+               .andExpect(jsonPath("number").value("1234567890"));
 
         // verify
         verify(accountManager).getAccount(0L);
-
     }
 
     @Test
@@ -104,11 +110,11 @@ public class AccountControllerTests {
         mockMvc.perform(get("/accounts/0"))
                .andExpect(status().isOk())
                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-               .andExpect(jsonPath("name").value("John Doe")).andExpect(jsonPath("number").value("1234567890"));
+               .andExpect(jsonPath("name").value("John Doe"))
+               .andExpect(jsonPath("number").value("1234567890"));
 
         // verify
         verify(accountManager).getAccount(0L);
-
     }
 
     @Test
@@ -128,7 +134,6 @@ public class AccountControllerTests {
 
         // verify
         verify(accountManager).getAccount(0L);
-
     }
 
     @Test
@@ -137,13 +142,12 @@ public class AccountControllerTests {
     public void accountDetailsFail_test_with_USER_role_should_proceed_successfully() throws Exception {
 
         given(accountManager.getAccount(any(Long.class)))
-                .willThrow(new IllegalArgumentException("No such account with id " + 0L));
+            .willThrow(new IllegalArgumentException("No such account with id " + 0L));
 
         mockMvc.perform(get("/accounts/0"))
                .andExpect(status().isNotFound());
 
         verify(accountManager).getAccount(any(Long.class));
-
     }
 
     @Test
@@ -161,7 +165,6 @@ public class AccountControllerTests {
                .andExpect(jsonPath("$..name").value("John Doe"));
 
         verify(accountManager).getAllAccounts();
-
     }
 
     @Test
@@ -180,7 +183,6 @@ public class AccountControllerTests {
                .andExpect(header().string("Location", "http://localhost/accounts/21"));
 
         verify(accountManager).save(any(Account.class));
-
     }
 
     // TODO-06b: Write a test that verifies that a user with "USER" role
@@ -192,8 +194,6 @@ public class AccountControllerTests {
     //    calling a method of a dependency.)
     @Test
     public void createAccount_with_USER_role_should_return_403() throws Exception {
-
-
 
     }
 
@@ -247,7 +247,6 @@ public class AccountControllerTests {
                .andExpect(status().isNoContent());
 
         verify(accountManager).getAccount(0L);
-
     }
 
     @Test
@@ -261,7 +260,6 @@ public class AccountControllerTests {
 
         mockMvc.perform(delete("/accounts/{entityId}/beneficiaries/{name}", 0L, "Corgan"))
                .andExpect(status().isForbidden());
-
     }
 
     @Test
@@ -286,6 +284,4 @@ public class AccountControllerTests {
             throw new RuntimeException(e);
         }
     }
-
 }
-

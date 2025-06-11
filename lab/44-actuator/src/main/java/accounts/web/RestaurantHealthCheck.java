@@ -13,7 +13,6 @@ public class RestaurantHealthCheck {
 
 }
 
-
 /**
  * TODO-25 (Optional): Experiment with HealthIndicator above
  * - Change "spring.sql.init.data-locations" property in the

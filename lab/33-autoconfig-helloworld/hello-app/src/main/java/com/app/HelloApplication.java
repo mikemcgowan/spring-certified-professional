@@ -1,6 +1,7 @@
 package com.app;
 
 import com.lib.HelloService;
+
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -69,7 +70,7 @@ import org.springframework.context.annotation.Bean;
 //
 // - Once this step is done, go to TO-DO-30 below
 
-// ------------------------------------------ 
+// ------------------------------------------
 
 // TODO-30: Now we would like to change the behavior through
 //          auto-configuration so that the
@@ -126,7 +127,5 @@ public class HelloApplication {
     public CommandLineRunner commandLineRunner(HelloService helloService) {
 
         return args -> helloService.greet();
-
     }
-
 }

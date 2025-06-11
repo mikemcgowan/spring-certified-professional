@@ -19,7 +19,7 @@ import org.springframework.security.web.SecurityFilterChain;
 @EnableMethodSecurity
 public class RestSecurityConfig {
 
-	@Bean
+    @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
         // @formatter:off
@@ -33,22 +33,31 @@ public class RestSecurityConfig {
             .httpBasic(withDefaults())
             .csrf(CsrfConfigurer::disable);
         // @formatter:on
-        
+
         return http.build();
     }
 
-	@Bean
+    @Bean
     public InMemoryUserDetailsManager userDetailsService(PasswordEncoder passwordEncoder) {
-    	
-        UserDetails user = User.withUsername("user").password(passwordEncoder.encode("user")).roles("USER").build();
-        UserDetails admin = User.withUsername("admin").password(passwordEncoder.encode("admin")).roles("USER", "ADMIN").build();
-        UserDetails superadmin = User.withUsername("superadmin").password(passwordEncoder.encode("superadmin")).roles("USER", "ADMIN", "SUPERADMIN").build();
 
-       return new InMemoryUserDetailsManager(user, admin, superadmin);
+        UserDetails user = User.withUsername("user")
+                               .password(passwordEncoder.encode("user"))
+                               .roles("USER")
+                               .build();
+        UserDetails admin = User.withUsername("admin")
+                                .password(passwordEncoder.encode("admin"))
+                                .roles("USER", "ADMIN")
+                                .build();
+        UserDetails superadmin = User.withUsername("superadmin")
+                                     .password(passwordEncoder.encode("superadmin"))
+                                     .roles("USER", "ADMIN", "SUPERADMIN")
+                                     .build();
+
+        return new InMemoryUserDetailsManager(user, admin, superadmin);
     }
-    
+
     @Bean
     public PasswordEncoder passwordEncoder() {
-    	return PasswordEncoderFactories.createDelegatingPasswordEncoder();
+        return PasswordEncoderFactories.createDelegatingPasswordEncoder();
     }
 }

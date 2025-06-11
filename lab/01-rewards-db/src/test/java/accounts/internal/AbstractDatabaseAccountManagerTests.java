@@ -1,12 +1,13 @@
 package accounts.internal;
 
+import javax.sql.DataSource;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.transaction.PlatformTransactionManager;
-import utils.TransactionUtils;
 
-import javax.sql.DataSource;
+import utils.TransactionUtils;
 
 /**
  * Supports transactional testing of AccountManager implementation in both a
@@ -21,35 +22,36 @@ import javax.sql.DataSource;
  */
 public abstract class AbstractDatabaseAccountManagerTests extends AbstractAccountManagerTests {
 
-	protected static int numAccountsInDb = -1;
+    protected static int numAccountsInDb = -1;
 
-	@Autowired
-	protected PlatformTransactionManager transactionManager;
+    @Autowired
+    protected PlatformTransactionManager transactionManager;
 
-	@Autowired
-	protected DataSource dataSource;
+    @Autowired
+    protected DataSource dataSource;
 
-	protected TransactionUtils transactionUtils;
+    protected TransactionUtils transactionUtils;
 
-	@Override
-	protected void showStatus() {
-		logger.info("TRANSACTION IS : " + transactionUtils.getCurrentTransaction());
-	}
+    @Override
+    protected void showStatus() {
+        logger.info("TRANSACTION IS : " + transactionUtils.getCurrentTransaction());
+    }
 
-	@BeforeEach
-	public void setUp() throws Exception {
-		// The number of test accounts in the database - a static variable so we only do
-		// this once.
-		if (numAccountsInDb == -1)
-			numAccountsInDb = new JdbcTemplate(dataSource).queryForObject("SELECT count(*) FROM T_Account",
-					Integer.class);
+    @BeforeEach
+    public void setUp() throws Exception {
+        // The number of test accounts in the database - a static variable so we only do
+        // this once.
+        if (numAccountsInDb == -1) {
+            numAccountsInDb = new JdbcTemplate(dataSource).queryForObject("SELECT count(*) FROM T_Account",
+                                                                          Integer.class);
+        }
 
-		// Setup the transaction utility class
-		transactionUtils = new TransactionUtils(transactionManager);
-	}
+        // Setup the transaction utility class
+        transactionUtils = new TransactionUtils(transactionManager);
+    }
 
-	@Override
-	protected int getNumAccountsExpected() {
-		return numAccountsInDb;
-	}
+    @Override
+    protected int getNumAccountsExpected() {
+        return numAccountsInDb;
+    }
 }

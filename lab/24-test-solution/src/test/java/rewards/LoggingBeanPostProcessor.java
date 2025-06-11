@@ -12,24 +12,25 @@ import org.springframework.beans.factory.config.BeanPostProcessor;
  */
 public class LoggingBeanPostProcessor implements BeanPostProcessor {
 
-	private final Logger logger = LoggerFactory.getLogger(getClass());
+    private final Logger logger = LoggerFactory.getLogger(getClass());
 
-	@Override
-	public Object postProcessBeforeInitialization(Object bean, String beanName)
-			throws BeansException {
-		return bean;
-	}
+    @Override
+    public Object postProcessBeforeInitialization(Object bean, String beanName)
+        throws BeansException {
+        return bean;
+    }
 
-	@Override
-	public Object postProcessAfterInitialization(Object bean, String beanName)
-			throws BeansException {
+    @Override
+    public Object postProcessAfterInitialization(Object bean, String beanName)
+        throws BeansException {
 
-		// Log the names and types of all non inner-beans created
-		if (!beanName.contains("inner bean"))
-			logger.info("NEW " + bean.getClass().getSimpleName() + " -> "
-					+ beanName);
+        // Log the names and types of all non inner-beans created
+        if (!beanName.contains("inner bean")) {
+            logger.info("NEW " + bean.getClass()
+                                     .getSimpleName() + " -> "
+                        + beanName);
+        }
 
-		return bean;
-	}
-
+        return bean;
+    }
 }

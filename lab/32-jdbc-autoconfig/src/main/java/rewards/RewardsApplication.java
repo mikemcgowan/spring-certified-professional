@@ -36,10 +36,11 @@ import org.springframework.boot.SpringApplication;
 //           The section titled "Build and Run using Command Line tools".
 
 public class RewardsApplication {
+
     static final String SQL = "SELECT count(*) FROM T_ACCOUNT";
 
     final Logger logger
-            = LoggerFactory.getLogger(RewardsApplication.class);
+        = LoggerFactory.getLogger(RewardsApplication.class);
 
     public static void main(String[] args) {
         SpringApplication.run(RewardsApplication.class, args);
@@ -67,5 +68,4 @@ public class RewardsApplication {
     //   "DataSourceAutoConfiguration matched:". Note that each @Conditional*
     //   represents a single conditional statement in the "JdbcTemplateAutoConfiguration"
     //   and "DataSourceAutoConfiguration" classes.
-
 }

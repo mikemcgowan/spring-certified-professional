@@ -32,75 +32,78 @@ import org.springframework.transaction.PlatformTransactionManager;
 @PropertySource(value = "application.properties", ignoreResourceNotFound = true)
 public class DbConfig {
 
-	public static final String DOMAIN_OBJECTS_PARENT_PACKAGE = "rewards.internal";
+    public static final String DOMAIN_OBJECTS_PARENT_PACKAGE = "rewards.internal";
 
-	@Value("${spring.jpa.show-sql:true}")  // Default to true if not set elsewhere
-	private String showSql;
+    @Value("${spring.jpa.show-sql:true}")  // Default to true if not set elsewhere
+    private String showSql;
 
-	/**
-	 * Creates an in-memory "rewards" database populated with test data for fast
-	 * testing
-	 */
-	@Bean
-	public DataSource dataSource() {
-		return (new EmbeddedDatabaseBuilder()) //
-				.addScript("classpath:rewards/testdb/schema.sql") //
-				.addScript("classpath:rewards/testdb/data.sql").build();
-	}
+    /**
+     * Creates an in-memory "rewards" database populated with test data for fast
+     * testing
+     */
+    @Bean
+    public DataSource dataSource() {
+        return (new EmbeddedDatabaseBuilder()) //
+                                               .addScript("classpath:rewards/testdb/schema.sql") //
+                                               .addScript("classpath:rewards/testdb/data.sql")
+                                               .build();
+    }
 
-	/**
-	 * Transaction Manager For JPA
-	 */
-	@Bean
-	public PlatformTransactionManager transactionManager() throws Exception {
-		return new JpaTransactionManager();
-	}
+    /**
+     * Transaction Manager For JPA
+     */
+    @Bean
+    public PlatformTransactionManager transactionManager() throws Exception {
+        return new JpaTransactionManager();
+    }
 
-	/**
-	 * Create an EntityManagerFactoryBean.
-	 */
-	@Bean
-	public LocalContainerEntityManagerFactoryBean entityManagerFactory(JpaVendorAdapter adapter) {
+    /**
+     * Create an EntityManagerFactoryBean.
+     */
+    @Bean
+    public LocalContainerEntityManagerFactoryBean entityManagerFactory(JpaVendorAdapter adapter) {
 
-		// Tell the underlying implementation what type of database we are using - a
-		// hint to generate better SQL
-		if (adapter instanceof AbstractJpaVendorAdapter) {
-			((AbstractJpaVendorAdapter) adapter).setDatabase(Database.HSQL);
-		}
+        // Tell the underlying implementation what type of database we are using - a
+        // hint to generate better SQL
+        if (adapter instanceof AbstractJpaVendorAdapter) {
+            ((AbstractJpaVendorAdapter) adapter).setDatabase(Database.HSQL);
+        }
 
-		// Setup configuration properties
-		Properties props = new Properties();
-		boolean showSql = "TRUE".equalsIgnoreCase(this.showSql);
-		Logger.getLogger("config").info("JPA Show generated SQL? " + this.showSql);
+        // Setup configuration properties
+        Properties props = new Properties();
+        boolean showSql = "TRUE".equalsIgnoreCase(this.showSql);
+        Logger.getLogger("config")
+              .info("JPA Show generated SQL? " + this.showSql);
 
-		if (adapter instanceof EclipseLinkJpaVendorAdapter) {
-			props.setProperty("eclipselink.logging.level", showSql ? "FINE" : "WARN");
-			props.setProperty("eclipselink.logging.parameters", String.valueOf(showSql));
-			props.setProperty("eclipselink.weaving", "false");
-		} else {
-			props.setProperty("hibernate.show_sql", String.valueOf(showSql));
-			props.setProperty("hibernate.format_sql", "true");
-		}
+        if (adapter instanceof EclipseLinkJpaVendorAdapter) {
+            props.setProperty("eclipselink.logging.level", showSql ? "FINE" : "WARN");
+            props.setProperty("eclipselink.logging.parameters", String.valueOf(showSql));
+            props.setProperty("eclipselink.weaving", "false");
+        } else {
+            props.setProperty("hibernate.show_sql", String.valueOf(showSql));
+            props.setProperty("hibernate.format_sql", "true");
+        }
 
-		LocalContainerEntityManagerFactoryBean emfb = new LocalContainerEntityManagerFactoryBean();
-		emfb.setPackagesToScan(DOMAIN_OBJECTS_PARENT_PACKAGE);
-		emfb.setJpaProperties(props);
-		emfb.setJpaVendorAdapter(adapter);
-		emfb.setDataSource(dataSource());
+        LocalContainerEntityManagerFactoryBean emfb = new LocalContainerEntityManagerFactoryBean();
+        emfb.setPackagesToScan(DOMAIN_OBJECTS_PARENT_PACKAGE);
+        emfb.setJpaProperties(props);
+        emfb.setJpaVendorAdapter(adapter);
+        emfb.setDataSource(dataSource());
 
-		return emfb;
-	}
+        return emfb;
+    }
 
-	@Bean
-	@Profile("!jpa-elink") // Default is JPA using Hibernate
-	JpaVendorAdapter hibernateVendorAdapter() {
-		return new HibernateJpaVendorAdapter();
-	}
+    @Bean
+    @Profile("!jpa-elink")
+        // Default is JPA using Hibernate
+    JpaVendorAdapter hibernateVendorAdapter() {
+        return new HibernateJpaVendorAdapter();
+    }
 
-	@Bean
-	@Profile("jpa-elink") // Explicitly request JPA using EclipseLink
-	JpaVendorAdapter eclipseLinkVendorAdapter() {
-		return new EclipseLinkJpaVendorAdapter();
-	}
-
+    @Bean
+    @Profile("jpa-elink")
+        // Explicitly request JPA using EclipseLink
+    JpaVendorAdapter eclipseLinkVendorAdapter() {
+        return new EclipseLinkJpaVendorAdapter();
+    }
 }

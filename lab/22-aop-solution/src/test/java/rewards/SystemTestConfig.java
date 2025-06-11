@@ -10,23 +10,20 @@ import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
 import config.AspectsConfig;
 import config.RewardsConfig;
 
-
 @Configuration
-@Import({RewardsConfig.class,AspectsConfig.class})
+@Import({RewardsConfig.class, AspectsConfig.class})
 public class SystemTestConfig {
 
-	
-	/**
-	 * Creates an in-memory "rewards" database populated 
-	 * with test data for fast testing
-	 */
-	@Bean
-	public DataSource dataSource(){
-		return
-			(new EmbeddedDatabaseBuilder())
-			.addScript("classpath:rewards/testdb/schema.sql")
-			.addScript("classpath:rewards/testdb/data.sql")
-			.build();
-	}	
-	
+    /**
+     * Creates an in-memory "rewards" database populated
+     * with test data for fast testing
+     */
+    @Bean
+    public DataSource dataSource() {
+        return
+            (new EmbeddedDatabaseBuilder())
+                .addScript("classpath:rewards/testdb/schema.sql")
+                .addScript("classpath:rewards/testdb/data.sql")
+                .build();
+    }
 }

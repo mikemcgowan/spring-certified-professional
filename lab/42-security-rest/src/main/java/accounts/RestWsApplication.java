@@ -45,7 +45,6 @@ public class RestWsApplication {
     public static void main(String[] args) {
         SpringApplication.run(RestWsApplication.class, args);
     }
-
 }
 
 // TODO-11: Test the method security using browser or curl

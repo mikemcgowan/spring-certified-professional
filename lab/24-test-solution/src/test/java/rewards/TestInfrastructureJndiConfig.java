@@ -11,18 +11,18 @@ import org.springframework.context.annotation.Profile;
 @Profile("jndi")
 public class TestInfrastructureJndiConfig {
 
-	/**
-	 * Static method because we are defining a Bean post-processor.
-	 */
-	@Bean
-	public static SimpleJndiHelper jndiHelper(){
-		return new SimpleJndiHelper();
-	}
-	
-	@Bean
-	public DataSource dataSource() throws Exception {
-		return (DataSource) 
-			(new InitialContext())
-				.lookup("java:/comp/env/jdbc/rewards");	
-	}
+    /**
+     * Static method because we are defining a Bean post-processor.
+     */
+    @Bean
+    public static SimpleJndiHelper jndiHelper() {
+        return new SimpleJndiHelper();
+    }
+
+    @Bean
+    public DataSource dataSource() throws Exception {
+        return (DataSource)
+            (new InitialContext())
+                .lookup("java:/comp/env/jdbc/rewards");
+    }
 }

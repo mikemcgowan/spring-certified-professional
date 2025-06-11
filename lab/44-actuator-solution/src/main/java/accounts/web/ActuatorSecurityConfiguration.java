@@ -37,20 +37,25 @@ public class ActuatorSecurityConfiguration {
             .httpBasic(withDefaults())
             .csrf(CsrfConfigurer::disable);
         // @formatter:on
-        
+
         return http.build();
     }
-    
 
     @Bean
     public InMemoryUserDetailsManager userDetailsService(PasswordEncoder passwordEncoder) {
-        
-        UserDetails actuator = User.withUsername("actuator").password(passwordEncoder.encode("actuator")).roles("ACTUATOR").build();
-        UserDetails admin = User.withUsername("admin").password(passwordEncoder.encode("admin")).roles("ACTUATOR", "ADMIN").build();
-     
+
+        UserDetails actuator = User.withUsername("actuator")
+                                   .password(passwordEncoder.encode("actuator"))
+                                   .roles("ACTUATOR")
+                                   .build();
+        UserDetails admin = User.withUsername("admin")
+                                .password(passwordEncoder.encode("admin"))
+                                .roles("ACTUATOR", "ADMIN")
+                                .build();
+
         return new InMemoryUserDetailsManager(actuator, admin);
     }
-    
+
     @Bean
     public PasswordEncoder passwordEncoder() {
         return PasswordEncoderFactories.createDelegatingPasswordEncoder();

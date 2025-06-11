@@ -11,11 +11,12 @@ package rewards.internal.restaurant;
 //   naming conventions so Spring Data will implement it automatically for you.
 public interface RestaurantRepository {
 
-	/**
-	 * Load a Restaurant entity by its merchant number.
-	 * @param merchantNumber the merchant number
-	 * @return the restaurant
-	 */
-	// To refactor: right click on the method name -> Refactor -> Rename
-	public Restaurant findByMerchantNumber(String merchantNumber);
+    /**
+     * Load a Restaurant entity by its merchant number.
+     *
+     * @param merchantNumber the merchant number
+     * @return the restaurant
+     */
+    // To refactor: right click on the method name -> Refactor -> Rename
+    public Restaurant findByMerchantNumber(String merchantNumber);
 }

@@ -15,20 +15,20 @@ import rewards.internal.reward.RewardRepository;
  */
 public class StubRewardRepository implements RewardRepository {
 
-	private final Logger logger = LoggerFactory.getLogger(getClass());
+    private final Logger logger = LoggerFactory.getLogger(getClass());
 
-	/**
-	 * Constructor logs creation so we know which repository we are using.
-	 */
-	public StubRewardRepository() {
-		logger.info("Creating " + getClass().getSimpleName());
-	}
+    /**
+     * Constructor logs creation so we know which repository we are using.
+     */
+    public StubRewardRepository() {
+        logger.info("Creating " + getClass().getSimpleName());
+    }
 
-	public RewardConfirmation confirmReward(AccountContribution contribution, Dining dining) {
-		return new RewardConfirmation(confirmationNumber(), contribution);
-	}
+    public RewardConfirmation confirmReward(AccountContribution contribution, Dining dining) {
+        return new RewardConfirmation(confirmationNumber(), contribution);
+    }
 
-	private String confirmationNumber() {
-		return new Random().toString();
-	}
+    private String confirmationNumber() {
+        return new Random().toString();
+    }
 }

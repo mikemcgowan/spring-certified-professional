@@ -23,7 +23,6 @@ import accounts.services.AccountService;
 import config.RestSecurityConfig;
 import rewards.internal.account.Account;
 
-
 @WebMvcTest(AccountController.class)
 @ContextConfiguration(classes = {RestWsApplication.class, RestSecurityConfig.class, CustomAuthenticationProvider.class})
 public class AccountControllerCustomAuthenticationProviderTests {
@@ -47,12 +46,10 @@ public class AccountControllerCustomAuthenticationProviderTests {
         mockMvc.perform(get("/accounts/0").with(httpBasic("spring", "spring")))
                .andExpect(status().isOk())
                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-               .andExpect(jsonPath("name").value("John Doe")).andExpect(jsonPath("number").value("1234567890"));
+               .andExpect(jsonPath("name").value("John Doe"))
+               .andExpect(jsonPath("number").value("1234567890"));
 
         // verify
         verify(accountManager).getAccount(0L);
-
     }
-
 }
-

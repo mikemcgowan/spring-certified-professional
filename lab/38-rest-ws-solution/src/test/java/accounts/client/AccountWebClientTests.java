@@ -1,7 +1,12 @@
 package accounts.client;
 
-import accounts.RestWsApplication;
-import common.money.Percentage;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import java.net.URI;
+import java.util.Random;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -10,15 +15,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.reactive.function.client.ClientResponse;
 import org.springframework.web.reactive.function.client.WebClient;
+
+import accounts.RestWsApplication;
+import common.money.Percentage;
 import reactor.core.publisher.Mono;
 import rewards.internal.account.Account;
 import rewards.internal.account.Beneficiary;
-
-import java.net.URI;
-import java.util.Random;
-
-import static org.junit.jupiter.api.Assertions.*;
-
 
 @SpringBootTest(classes = RestWsApplication.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class AccountWebClientTests {
@@ -52,8 +54,12 @@ public class AccountWebClientTests {
         System.out.println(accounts.length);
         assertTrue(accounts.length >= 21, "Expected 21 accounts, but found " + accounts.length);
         assertEquals("Keith and Keri Donald", accounts[0].getName());
-        assertEquals(2, accounts[0].getBeneficiaries().size());
-        assertEquals(Percentage.valueOf("50%"), accounts[0].getBeneficiary("Annabelle").getAllocationPercentage());
+        assertEquals(2,
+                     accounts[0].getBeneficiaries()
+                                .size());
+        assertEquals(Percentage.valueOf("50%"),
+                     accounts[0].getBeneficiary("Annabelle")
+                                .getAllocationPercentage());
     }
 
     @Test
@@ -67,8 +73,12 @@ public class AccountWebClientTests {
 
         assertTrue(accounts.length >= 21, "Expected 21 accounts, but found " + accounts.length);
         assertEquals("Keith and Keri Donald", accounts[0].getName());
-        assertEquals(2, accounts[0].getBeneficiaries().size());
-        assertEquals(Percentage.valueOf("50%"), accounts[0].getBeneficiary("Annabelle").getAllocationPercentage());
+        assertEquals(2,
+                     accounts[0].getBeneficiaries()
+                                .size());
+        assertEquals(Percentage.valueOf("50%"),
+                     accounts[0].getBeneficiary("Annabelle")
+                                .getAllocationPercentage());
     }
 
     @Test
@@ -82,8 +92,12 @@ public class AccountWebClientTests {
                                    .block();
 
         assertEquals("Keith and Keri Donald", account.getName());
-        assertEquals(2, account.getBeneficiaries().size());
-        assertEquals(Percentage.valueOf("50%"), account.getBeneficiary("Annabelle").getAllocationPercentage());
+        assertEquals(2,
+                     account.getBeneficiaries()
+                            .size());
+        assertEquals(Percentage.valueOf("50%"),
+                     account.getBeneficiary("Annabelle")
+                            .getAllocationPercentage());
     }
 
     @Test
@@ -96,8 +110,12 @@ public class AccountWebClientTests {
                                    .block();
 
         assertEquals("Keith and Keri Donald", account.getName());
-        assertEquals(2, account.getBeneficiaries().size());
-        assertEquals(Percentage.valueOf("50%"), account.getBeneficiary("Annabelle").getAllocationPercentage());
+        assertEquals(2,
+                     account.getBeneficiaries()
+                            .size());
+        assertEquals(Percentage.valueOf("50%"),
+                     account.getBeneficiary("Annabelle")
+                            .getAllocationPercentage());
     }
 
     @Test
@@ -114,7 +132,9 @@ public class AccountWebClientTests {
                                                  .exchangeToMono(response -> Mono.just(response))
                                                  .block();
 
-        URI newAccountLocation = new URI(clientResponse.headers().header("Location").get(0));
+        URI newAccountLocation = new URI(clientResponse.headers()
+                                                       .header("Location")
+                                                       .get(0));
 
         Account retrievedAccount = webClient.get()
                                             .uri(newAccountLocation)
@@ -125,8 +145,12 @@ public class AccountWebClientTests {
 
         assertEquals(account.getNumber(), retrievedAccount.getNumber());
 
-        Beneficiary accountBeneficiary = account.getBeneficiaries().iterator().next();
-        Beneficiary retrievedAccountBeneficiary = retrievedAccount.getBeneficiaries().iterator().next();
+        Beneficiary accountBeneficiary = account.getBeneficiaries()
+                                                .iterator()
+                                                .next();
+        Beneficiary retrievedAccountBeneficiary = retrievedAccount.getBeneficiaries()
+                                                                  .iterator()
+                                                                  .next();
 
         assertEquals(accountBeneficiary.getName(), retrievedAccountBeneficiary.getName());
         assertNotNull(retrievedAccount.getEntityId());
@@ -138,11 +162,11 @@ public class AccountWebClientTests {
         account.addBeneficiary("Jane Doe");
 
         ClientResponse clientResponse = webClient.post()
-                                  .uri("/accounts")
-                                  .contentType(MediaType.APPLICATION_JSON)
-                                  .bodyValue(account)
-                                  .exchangeToMono(response -> Mono.just(response))
-                                  .block();
+                                                 .uri("/accounts")
+                                                 .contentType(MediaType.APPLICATION_JSON)
+                                                 .bodyValue(account)
+                                                 .exchangeToMono(response -> Mono.just(response))
+                                                 .block();
 
         //assertEquals(HttpStatus.CONFLICT, clientResponse.statusCode());
         assertEquals(HttpStatus.CREATED, clientResponse.statusCode());
@@ -160,29 +184,30 @@ public class AccountWebClientTests {
                                                  .exchangeToMono(response -> Mono.just(response))
                                                  .block();
 
-        URI newBeneficiaryLocation = new URI(clientResponse.headers().header("Location").get(0));
+        URI newBeneficiaryLocation = new URI(clientResponse.headers()
+                                                           .header("Location")
+                                                           .get(0));
 
-        Beneficiary newBeneficiary= webClient.get()
-                                            .uri(newBeneficiaryLocation)
-                                            .accept(MediaType.APPLICATION_JSON)
-                                            .retrieve()
-                                            .bodyToMono(Beneficiary.class)
-                                            .block();
+        Beneficiary newBeneficiary = webClient.get()
+                                              .uri(newBeneficiaryLocation)
+                                              .accept(MediaType.APPLICATION_JSON)
+                                              .retrieve()
+                                              .bodyToMono(Beneficiary.class)
+                                              .block();
 
         assertEquals("David", newBeneficiary.getName());
 
         clientResponse = webClient.delete()
-                 .uri(newBeneficiaryLocation)
-                 .exchangeToMono(response -> Mono.just(response))
-                 .block();
+                                  .uri(newBeneficiaryLocation)
+                                  .exchangeToMono(response -> Mono.just(response))
+                                  .block();
 
         clientResponse = webClient.get()
-                 .uri(newBeneficiaryLocation)
-                 .accept(MediaType.APPLICATION_JSON)
-                 .exchangeToMono(response -> Mono.just(response))
-                 .block();
+                                  .uri(newBeneficiaryLocation)
+                                  .accept(MediaType.APPLICATION_JSON)
+                                  .exchangeToMono(response -> Mono.just(response))
+                                  .block();
 
         assertEquals(HttpStatus.NOT_FOUND, clientResponse.statusCode());
     }
-
 }

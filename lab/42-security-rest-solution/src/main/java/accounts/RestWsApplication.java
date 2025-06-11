@@ -15,5 +15,4 @@ public class RestWsApplication {
     public static void main(String[] args) {
         SpringApplication.run(RestWsApplication.class, args);
     }
-
 }

@@ -17,44 +17,47 @@ import rewards.internal.monitor.MonitorFactory;
 @Aspect
 @Component
 public class LoggingAspect {
+
     public final static String BEFORE = "'Before'";
     public final static String AROUND = "'Around'";
 
-	private Logger logger = LoggerFactory.getLogger(getClass());
-	private MonitorFactory monitorFactory;
+    private Logger logger = LoggerFactory.getLogger(getClass());
+    private MonitorFactory monitorFactory;
 
-	@Autowired
-	public LoggingAspect(MonitorFactory monitorFactory) {
-		super();
-		this.monitorFactory = monitorFactory;
-	}
+    @Autowired
+    public LoggingAspect(MonitorFactory monitorFactory) {
+        super();
+        this.monitorFactory = monitorFactory;
+    }
 
-	@Before("execution(public * rewards.internal.*.*Repository.find*(..))")
-	public void implLogging(JoinPoint joinPoint) {
-        logger.info(BEFORE + " advice implementation - " + joinPoint.getTarget().getClass() + //
-                    "; Executing before " + joinPoint.getSignature().getName() + //
+    @Before("execution(public * rewards.internal.*.*Repository.find*(..))")
+    public void implLogging(JoinPoint joinPoint) {
+        logger.info(BEFORE + " advice implementation - " + joinPoint.getTarget()
+                                                                    .getClass() + //
+                    "; Executing before " + joinPoint.getSignature()
+                                                     .getName() + //
                     "() method");
+    }
 
-	}
-
-	@Around("execution(public * rewards.internal.*.*Repository.update*(..))")
-	public Object monitor(ProceedingJoinPoint repositoryMethod) throws Throwable {
-		String name = createJoinPointTraceName(repositoryMethod);
-		Monitor monitor = monitorFactory.start(name);
-		try {
-			return repositoryMethod.proceed();
-		} finally {
-			monitor.stop();
+    @Around("execution(public * rewards.internal.*.*Repository.update*(..))")
+    public Object monitor(ProceedingJoinPoint repositoryMethod) throws Throwable {
+        String name = createJoinPointTraceName(repositoryMethod);
+        Monitor monitor = monitorFactory.start(name);
+        try {
+            return repositoryMethod.proceed();
+        } finally {
+            monitor.stop();
             logger.info(AROUND + " advice implementation - " + monitor);
+        }
+    }
 
-		}
-	}
-
-	private String createJoinPointTraceName(JoinPoint joinPoint) {
-		Signature signature = joinPoint.getSignature();
-		StringBuilder sb = new StringBuilder();
-		sb.append(signature.getDeclaringType().getSimpleName());
-		sb.append('.').append(signature.getName());
-		return sb.toString();
-	}
+    private String createJoinPointTraceName(JoinPoint joinPoint) {
+        Signature signature = joinPoint.getSignature();
+        StringBuilder sb = new StringBuilder();
+        sb.append(signature.getDeclaringType()
+                           .getSimpleName());
+        sb.append('.')
+          .append(signature.getName());
+        return sb.toString();
+    }
 }

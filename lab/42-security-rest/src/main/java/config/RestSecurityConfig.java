@@ -19,10 +19,10 @@ import org.springframework.security.web.SecurityFilterChain;
 @Configuration
 public class RestSecurityConfig {
 
-	@Bean
-	public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+    @Bean
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
-		// @formatter:off
+        // @formatter:off
         http.authorizeHttpRequests((authz) -> authz
                 // TODO-04: Configure authorization using requestMatchers method
                 // - Allow DELETE on the /accounts resource (or any sub-resource)
@@ -41,27 +41,30 @@ public class RestSecurityConfig {
         // @formatter:on
 
         return http.build();
-	}
+    }
 
-	// TODO-14b (Optional): Remove the InMemoryUserDetailsManager definition
-	// - Comment the @Bean annotation below
-	
-	@Bean
+    // TODO-14b (Optional): Remove the InMemoryUserDetailsManager definition
+    // - Comment the @Bean annotation below
+
+    @Bean
     public InMemoryUserDetailsManager userDetailsService(PasswordEncoder passwordEncoder) {
 
-		// TODO-05: Add three users with corresponding roles:
-		// - "user"/"user" with "USER" role (example code is provided below)
-		// - "admin"/"admin" with "USER" and "ADMIN" roles
-		// - "superadmin"/"superadmin" with "USER", "ADMIN", and "SUPERADMIN" roles
-		// (Make sure to store the password in encoded form.)
-    	// - pass all users in the InMemoryUserDetailsManager constructor
-		UserDetails user = User.withUsername("user").password(passwordEncoder.encode("user")).roles("USER").build();
+        // TODO-05: Add three users with corresponding roles:
+        // - "user"/"user" with "USER" role (example code is provided below)
+        // - "admin"/"admin" with "USER" and "ADMIN" roles
+        // - "superadmin"/"superadmin" with "USER", "ADMIN", and "SUPERADMIN" roles
+        // (Make sure to store the password in encoded form.)
+        // - pass all users in the InMemoryUserDetailsManager constructor
+        UserDetails user = User.withUsername("user")
+                               .password(passwordEncoder.encode("user"))
+                               .roles("USER")
+                               .build();
 
-		return new InMemoryUserDetailsManager(user /* Add new users comma-separated here */);
-	}
-    
+        return new InMemoryUserDetailsManager(user /* Add new users comma-separated here */);
+    }
+
     @Bean
     public PasswordEncoder passwordEncoder() {
-    	return PasswordEncoderFactories.createDelegatingPasswordEncoder();
+        return PasswordEncoderFactories.createDelegatingPasswordEncoder();
     }
 }

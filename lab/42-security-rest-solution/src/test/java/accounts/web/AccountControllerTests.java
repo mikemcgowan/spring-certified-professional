@@ -11,6 +11,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import java.util.Arrays;
 import java.util.List;
 
@@ -22,8 +24,6 @@ import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 import accounts.AccountManager;
 import accounts.RestWsApplication;
@@ -54,20 +54,21 @@ public class AccountControllerTests {
     }
 
     @Test
-    @WithMockUser( roles = {"USER"})
+    @WithMockUser(roles = {"USER"})
     public void accountDetails_with_USER_role_should_return_200() throws Exception {
 
         // arrange
         given(accountManager.getAccount(0L)).willReturn(new Account("1234567890", "John Doe"));
 
         // act and assert
-        mockMvc.perform(get("/accounts/0")).andExpect(status().isOk())
+        mockMvc.perform(get("/accounts/0"))
+               .andExpect(status().isOk())
                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-               .andExpect(jsonPath("name").value("John Doe")).andExpect(jsonPath("number").value("1234567890"));
+               .andExpect(jsonPath("name").value("John Doe"))
+               .andExpect(jsonPath("number").value("1234567890"));
 
         // verify
         verify(accountManager).getAccount(0L);
-
     }
 
     @Test
@@ -78,14 +79,14 @@ public class AccountControllerTests {
         given(accountManager.getAccount(0L)).willReturn(new Account("1234567890", "John Doe"));
 
         // act and assert
-        mockMvc.perform(get("/accounts/0")).andExpect(status().isOk())
+        mockMvc.perform(get("/accounts/0"))
+               .andExpect(status().isOk())
                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                .andExpect(jsonPath("name").value("John Doe"))
                .andExpect(jsonPath("number").value("1234567890"));
 
         // verify
         verify(accountManager).getAccount(0L);
-
     }
 
     @Test
@@ -96,13 +97,14 @@ public class AccountControllerTests {
         given(accountManager.getAccount(0L)).willReturn(new Account("1234567890", "John Doe"));
 
         // act and assert
-        mockMvc.perform(get("/accounts/0")).andExpect(status().isOk())
+        mockMvc.perform(get("/accounts/0"))
+               .andExpect(status().isOk())
                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-               .andExpect(jsonPath("name").value("John Doe")).andExpect(jsonPath("number").value("1234567890"));
+               .andExpect(jsonPath("name").value("John Doe"))
+               .andExpect(jsonPath("number").value("1234567890"));
 
         // verify
         verify(accountManager).getAccount(0L);
-
     }
 
     @Test
@@ -113,13 +115,14 @@ public class AccountControllerTests {
         given(accountManager.getAccount(0L)).willReturn(new Account("1234567890", "John Doe"));
 
         // act and assert
-        mockMvc.perform(get("/accounts/0")).andExpect(status().isOk())
+        mockMvc.perform(get("/accounts/0"))
+               .andExpect(status().isOk())
                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-               .andExpect(jsonPath("name").value("John Doe")).andExpect(jsonPath("number").value("1234567890"));
+               .andExpect(jsonPath("name").value("John Doe"))
+               .andExpect(jsonPath("number").value("1234567890"));
 
         // verify
         verify(accountManager).getAccount(0L);
-
     }
 
     @Test
@@ -127,12 +130,12 @@ public class AccountControllerTests {
     public void accountDetailsFail_test_with_USER_role_should_proceed_successfully() throws Exception {
 
         given(accountManager.getAccount(any(Long.class)))
-                .willThrow(new IllegalArgumentException("No such account with id " + 0L));
+            .willThrow(new IllegalArgumentException("No such account with id " + 0L));
 
-        mockMvc.perform(get("/accounts/0")).andExpect(status().isNotFound());
+        mockMvc.perform(get("/accounts/0"))
+               .andExpect(status().isNotFound());
 
         verify(accountManager).getAccount(any(Long.class));
-
     }
 
     @Test
@@ -142,12 +145,13 @@ public class AccountControllerTests {
         List<Account> testAccounts = Arrays.asList(new Account("123456789", "John Doe"));
         given(accountManager.getAllAccounts()).willReturn(testAccounts);
 
-        mockMvc.perform(get("/accounts")).andExpect(status().isOk())
+        mockMvc.perform(get("/accounts"))
+               .andExpect(status().isOk())
                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-               .andExpect(jsonPath("$..number").value("123456789")).andExpect(jsonPath("$..name").value("John Doe"));
+               .andExpect(jsonPath("$..number").value("123456789"))
+               .andExpect(jsonPath("$..name").value("John Doe"));
 
         verify(accountManager).getAllAccounts();
-
     }
 
     @Test
@@ -159,12 +163,12 @@ public class AccountControllerTests {
         given(accountManager.save(any(Account.class))).willReturn(testAccount);
 
         mockMvc.perform(post("/accounts").contentType(MediaType.APPLICATION_JSON)
-                                         .content(asJsonString(testAccount)).accept(MediaType.APPLICATION_JSON))
+                                         .content(asJsonString(testAccount))
+                                         .accept(MediaType.APPLICATION_JSON))
                .andExpect(status().isCreated())
                .andExpect(header().string("Location", "http://localhost/accounts/21"));
 
         verify(accountManager).save(any(Account.class));
-
     }
 
     @Test
@@ -175,9 +179,9 @@ public class AccountControllerTests {
         testAccount.setEntityId(21L);
 
         mockMvc.perform(post("/accounts").contentType(MediaType.APPLICATION_JSON)
-                                         .content(asJsonString(testAccount)).accept(MediaType.APPLICATION_JSON))
+                                         .content(asJsonString(testAccount))
+                                         .accept(MediaType.APPLICATION_JSON))
                .andExpect(status().isForbidden());
-
     }
 
     @Test
@@ -226,7 +230,6 @@ public class AccountControllerTests {
                .andExpect(status().isNoContent());
 
         verify(accountManager).getAccount(0L);
-
     }
 
     @Test
@@ -239,7 +242,6 @@ public class AccountControllerTests {
 
         mockMvc.perform(delete("/accounts/{entityId}/beneficiaries/{name}", 0L, "Corgan"))
                .andExpect(status().isForbidden());
-
     }
 
     @Test
@@ -263,6 +265,4 @@ public class AccountControllerTests {
             throw new RuntimeException(e);
         }
     }
-
 }
-

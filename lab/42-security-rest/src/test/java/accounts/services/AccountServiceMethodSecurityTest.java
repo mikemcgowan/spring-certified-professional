@@ -1,6 +1,7 @@
 package accounts.services;
 
-import accounts.RestWsApplication;
+import static org.assertj.core.api.Assertions.assertThat;
+
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,8 +10,6 @@ import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-
-import static org.assertj.core.api.Assertions.*;
 
 // TODO-12a: Perform method security testing with a running server
 // - Take some time to understand what each test is for
@@ -28,7 +27,7 @@ class AccountServiceMethodSecurityTest {
     void getAuthoritiesForUser_should_return_403_for_user() {
 
         ResponseEntity<String> responseEntity = restTemplate.withBasicAuth("user", "user")
-                                                         .getForEntity("/authorities?username=user", String.class);
+                                                            .getForEntity("/authorities?username=user", String.class);
 
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.FORBIDDEN);
     }
@@ -40,9 +39,10 @@ class AccountServiceMethodSecurityTest {
         String[] authorities = restTemplate.withBasicAuth("admin", "admin")
                                            .getForObject("/authorities?username=admin", String[].class);
         assertThat(authorities.length).isEqualTo(2);
-        assertThat(authorities.toString().contains("ROLE_ADMIN"));
-        assertThat(authorities.toString().contains("ROLE_USER"));
-
+        assertThat(authorities.toString()
+                              .contains("ROLE_ADMIN"));
+        assertThat(authorities.toString()
+                              .contains("ROLE_USER"));
     }
 
     // TODO-12b: Write a test that verifies that getting authorities
@@ -53,8 +53,5 @@ class AccountServiceMethodSecurityTest {
     @Test
     public void getAuthoritiesForUser_should_return_authorities_for_superadmin() {
 
-
-
     }
-
 }

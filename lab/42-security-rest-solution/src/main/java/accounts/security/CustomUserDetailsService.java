@@ -1,7 +1,6 @@
 package accounts.security;
 
 import org.springframework.context.annotation.Primary;
-import org.springframework.context.annotation.Primary;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -23,7 +22,7 @@ public class CustomUserDetailsService implements UserDetailsService {
         User.UserBuilder builder = User.builder();
         builder.username(username);
         builder.password(passwordEncoder.encode(username));
-        
+
         switch (username) {
             case "mary":
                 builder.roles("USER");

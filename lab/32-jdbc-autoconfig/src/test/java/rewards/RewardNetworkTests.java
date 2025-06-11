@@ -1,14 +1,15 @@
 package rewards;
 
-import common.money.MonetaryAmount;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import common.money.MonetaryAmount;
 
 /**
  * A system test that verifies the components of the RewardNetwork application work together to reward for dining
@@ -56,10 +57,16 @@ public class RewardNetworkTests {
         assertEquals(MonetaryAmount.valueOf("8.00"), contribution.getAmount());
 
         // the total contribution amount should have been split into 2 distributions
-        assertEquals(2, contribution.getDistributions().size());
+        assertEquals(2,
+                     contribution.getDistributions()
+                                 .size());
 
         // each distribution should be 4.00 (as both have a 50% allocation)
-        assertEquals(MonetaryAmount.valueOf("4.00"), contribution.getDistribution("Annabelle").getAmount());
-        assertEquals(MonetaryAmount.valueOf("4.00"), contribution.getDistribution("Corgan").getAmount());
+        assertEquals(MonetaryAmount.valueOf("4.00"),
+                     contribution.getDistribution("Annabelle")
+                                 .getAmount());
+        assertEquals(MonetaryAmount.valueOf("4.00"),
+                     contribution.getDistribution("Corgan")
+                                 .getAmount());
     }
 }

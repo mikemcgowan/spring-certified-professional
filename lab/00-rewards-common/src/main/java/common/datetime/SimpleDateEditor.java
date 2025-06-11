@@ -11,24 +11,24 @@ import java.util.Locale;
  */
 public class SimpleDateEditor extends PropertyEditorSupport {
 
-	private DateFormat dateFormat = DateFormat.getDateInstance(DateFormat.LONG, Locale.ENGLISH);
-	
-	@Override
-	public String getAsText() {
-		SimpleDate date = (SimpleDate) getValue();
-		if (date == null) {
-			return "";
-		} else {
-			return dateFormat.format(date.asDate());
-		}
-	}
-	
-	@Override
-	public void setAsText(String text) throws IllegalArgumentException {
-		try {
-			setValue(SimpleDate.valueOf(dateFormat.parse(text)));
-		} catch (ParseException e) {
-			throw new IllegalArgumentException("Unable to convert String '" + text + "' to a SimpleDate", e);
-		}
-	}
+    private DateFormat dateFormat = DateFormat.getDateInstance(DateFormat.LONG, Locale.ENGLISH);
+
+    @Override
+    public String getAsText() {
+        SimpleDate date = (SimpleDate) getValue();
+        if (date == null) {
+            return "";
+        } else {
+            return dateFormat.format(date.asDate());
+        }
+    }
+
+    @Override
+    public void setAsText(String text) throws IllegalArgumentException {
+        try {
+            setValue(SimpleDate.valueOf(dateFormat.parse(text)));
+        } catch (ParseException e) {
+            throw new IllegalArgumentException("Unable to convert String '" + text + "' to a SimpleDate", e);
+        }
+    }
 }

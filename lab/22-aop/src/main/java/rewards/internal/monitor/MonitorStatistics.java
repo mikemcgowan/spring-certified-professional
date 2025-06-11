@@ -2,18 +2,17 @@ package rewards.internal.monitor;
 
 public interface MonitorStatistics {
 
-	String getName();
+    String getName();
 
-	long getLastCallTime();
+    long getLastCallTime();
 
-	long getCallCount();
+    long getCallCount();
 
-	long getAverageCallTime();
+    long getAverageCallTime();
 
-	long getTotalCallTime();
+    long getTotalCallTime();
 
-	long getMinimumCallTime();
+    long getMinimumCallTime();
 
-	long getMaximumCallTime();
-
+    long getMaximumCallTime();
 }

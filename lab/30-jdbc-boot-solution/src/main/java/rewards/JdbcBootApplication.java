@@ -14,12 +14,12 @@ public class JdbcBootApplication {
     }
 
     @Bean
-    CommandLineRunner commandLineRunner(JdbcTemplate jdbcTemplate){
+    CommandLineRunner commandLineRunner(JdbcTemplate jdbcTemplate) {
 
         String QUERY = "SELECT count(*) FROM T_ACCOUNT";
 
         return args -> System.out.println("Hello, there are "
-                + jdbcTemplate.queryForObject(QUERY, Long.class)
-                + " accounts");
+                                          + jdbcTemplate.queryForObject(QUERY, Long.class)
+                                          + " accounts");
     }
 }

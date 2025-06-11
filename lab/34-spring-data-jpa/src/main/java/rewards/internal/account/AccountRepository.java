@@ -13,14 +13,12 @@ package rewards.internal.account;
 //    conventions - use refactoring feature of the IDE
 public interface AccountRepository {
 
-	/**
-	 * Load an account by its credit card.
-	 *
-	 * @param creditCardNumber
-	 *            the credit card number
-	 * @return the account object
-	 */
-	// To refactor: right click on the method name -> Refactor -> Rename
-	public Account findByCreditCard(String creditCardNumber);
-
+    /**
+     * Load an account by its credit card.
+     *
+     * @param creditCardNumber the credit card number
+     * @return the account object
+     */
+    // To refactor: right click on the method name -> Refactor -> Rename
+    public Account findByCreditCard(String creditCardNumber);
 }

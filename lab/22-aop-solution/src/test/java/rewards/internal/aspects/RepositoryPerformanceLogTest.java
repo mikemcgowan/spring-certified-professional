@@ -16,21 +16,20 @@ import rewards.internal.monitor.jamon.JamonMonitorFactory;
  */
 public class RepositoryPerformanceLogTest {
 
-	@Test
-	public void testMonitor() throws Throwable {
-		JamonMonitorFactory monitorFactory = new JamonMonitorFactory();
-		LoggingAspect performanceMonitor = new LoggingAspect(monitorFactory);
-		Signature signature = EasyMock.createMock(Signature.class);
-		ProceedingJoinPoint targetMethod = EasyMock.createMock(ProceedingJoinPoint.class);
+    @Test
+    public void testMonitor() throws Throwable {
+        JamonMonitorFactory monitorFactory = new JamonMonitorFactory();
+        LoggingAspect performanceMonitor = new LoggingAspect(monitorFactory);
+        Signature signature = EasyMock.createMock(Signature.class);
+        ProceedingJoinPoint targetMethod = EasyMock.createMock(ProceedingJoinPoint.class);
 
-		expect(targetMethod.getSignature()).andReturn(signature);
-		expect(signature.getDeclaringType()).andReturn(Object.class);
-		expect(signature.getName()).andReturn("hashCode");
-		expect(targetMethod.proceed()).andReturn(new Object());
+        expect(targetMethod.getSignature()).andReturn(signature);
+        expect(signature.getDeclaringType()).andReturn(Object.class);
+        expect(signature.getName()).andReturn("hashCode");
+        expect(targetMethod.proceed()).andReturn(new Object());
 
-		replay(signature, targetMethod);
-		performanceMonitor.monitor(targetMethod);
-		verify(signature, targetMethod);
-	}
-
+        replay(signature, targetMethod);
+        performanceMonitor.monitor(targetMethod);
+        verify(signature, targetMethod);
+    }
 }

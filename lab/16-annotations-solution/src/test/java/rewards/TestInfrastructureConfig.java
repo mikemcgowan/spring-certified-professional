@@ -13,16 +13,16 @@ import config.RewardsConfig;
 @Import(RewardsConfig.class)
 public class TestInfrastructureConfig {
 
-	/**
-	 * Creates an in-memory "rewards" database populated 
-	 * with test data for fast testing
-	 */
-	@Bean
-	public DataSource dataSource(){
-		return
-			(new EmbeddedDatabaseBuilder())
-			.addScript("classpath:rewards/testdb/schema.sql")
-			.addScript("classpath:rewards/testdb/data.sql")
-			.build();
-	}	
+    /**
+     * Creates an in-memory "rewards" database populated
+     * with test data for fast testing
+     */
+    @Bean
+    public DataSource dataSource() {
+        return
+            (new EmbeddedDatabaseBuilder())
+                .addScript("classpath:rewards/testdb/schema.sql")
+                .addScript("classpath:rewards/testdb/data.sql")
+                .build();
+    }
 }

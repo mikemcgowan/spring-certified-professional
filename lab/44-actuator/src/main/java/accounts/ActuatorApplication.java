@@ -59,7 +59,7 @@ import config.AppConfig;
  *   info gets displayed
  *
  * TODO-07 (Optional): Add additional properties to the info endpoint
-
+ *
  *
  * ------------------------------------------------
  *
@@ -81,17 +81,15 @@ import config.AppConfig;
  *
  * TODO-20: Look for "TO-DO-20: Organize health indicators into groups"
  *          in the application.properties
- *
  */
 @SpringBootApplication
 @Import(AppConfig.class)
 @EntityScan("rewards.internal")
 public class ActuatorApplication {
 
-	public static void main(String[] args) {
-		SpringApplication.run(ActuatorApplication.class, args);
-	}
-
+    public static void main(String[] args) {
+        SpringApplication.run(ActuatorApplication.class, args);
+    }
 }
 
 /*

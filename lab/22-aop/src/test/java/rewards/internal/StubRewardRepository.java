@@ -12,11 +12,11 @@ import rewards.internal.reward.RewardRepository;
  */
 public class StubRewardRepository implements RewardRepository {
 
-	public RewardConfirmation updateReward(AccountContribution contribution, Dining dining) {
-		return new RewardConfirmation(confirmationNumber(), contribution);
-	}
+    public RewardConfirmation updateReward(AccountContribution contribution, Dining dining) {
+        return new RewardConfirmation(confirmationNumber(), contribution);
+    }
 
-	private String confirmationNumber() {
-		return new Random().toString();
-	}
+    private String confirmationNumber() {
+        return new Random().toString();
+    }
 }

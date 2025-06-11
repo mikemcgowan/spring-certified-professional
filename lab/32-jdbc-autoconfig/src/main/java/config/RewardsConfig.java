@@ -1,10 +1,13 @@
 package config;
 
+import javax.sql.DataSource;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+
 import rewards.RewardNetwork;
 import rewards.internal.RewardNetworkImpl;
 import rewards.internal.account.AccountRepository;
@@ -14,19 +17,17 @@ import rewards.internal.restaurant.RestaurantRepository;
 import rewards.internal.reward.JdbcRewardRepository;
 import rewards.internal.reward.RewardRepository;
 
-import javax.sql.DataSource;
-
 @Configuration
 public class RewardsConfig {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
-	DataSource dataSource;
+    DataSource dataSource;
 
-	@Autowired  // This @Autowired annotation is optional here
-	public RewardsConfig(DataSource dataSource) {
-		this.dataSource = dataSource;
-	}
+    @Autowired  // This @Autowired annotation is optional here
+    public RewardsConfig(DataSource dataSource) {
+        this.dataSource = dataSource;
+    }
 
     // TODO-10 (Optional) : Switch back to explicit `DataSource` configuration
     // (Instead of using auto-configured DataSource, we are going to configure
@@ -53,9 +54,9 @@ public class RewardsConfig {
     @Bean
     public RewardNetwork rewardNetwork() {
         return new RewardNetworkImpl(
-                accountRepository(),
-                restaurantRepository(),
-                rewardRepository());
+            accountRepository(),
+            restaurantRepository(),
+            rewardRepository());
     }
 
     @Bean
@@ -75,5 +76,4 @@ public class RewardsConfig {
         JdbcRewardRepository repository = new JdbcRewardRepository(dataSource);
         return repository;
     }
-
 }

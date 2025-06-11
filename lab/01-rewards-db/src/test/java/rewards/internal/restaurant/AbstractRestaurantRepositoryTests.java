@@ -1,12 +1,13 @@
 package rewards.internal.restaurant;
 
-import common.money.Percentage;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
-import static org.junit.jupiter.api.Assertions.*;
-
+import common.money.Percentage;
 
 /**
  * Unit tests for a restaurant repository implementation.
@@ -18,26 +19,25 @@ import static org.junit.jupiter.api.Assertions.*;
  */
 public abstract class AbstractRestaurantRepositoryTests {
 
-	@Autowired
-	protected RestaurantRepository restaurantRepository;
+    @Autowired
+    protected RestaurantRepository restaurantRepository;
 
-	@Test
-	public abstract void testProfile();
+    @Test
+    public abstract void testProfile();
 
-	@Test
-	@Transactional
-	public final void findRestaurantByMerchantNumber() {
-		Restaurant restaurant = restaurantRepository
-				.findByMerchantNumber("1234567890");
-		assertNotNull(restaurant, "the restaurant should never be null");
-		assertEquals("1234567890",
-				restaurant.getNumber(), "the merchant number is wrong");
-		assertEquals("AppleBees", restaurant.getName(), "the name is wrong");
-		assertEquals(
-				Percentage.valueOf("8%"), restaurant.getBenefitPercentage(), "the benefitPercentage is wrong");
-		assertEquals(
-				AlwaysAvailable.INSTANCE,
-				restaurant.getBenefitAvailabilityPolicy(), "the benefit availability policy is wrong");
-	}
-
+    @Test
+    @Transactional
+    public final void findRestaurantByMerchantNumber() {
+        Restaurant restaurant = restaurantRepository
+            .findByMerchantNumber("1234567890");
+        assertNotNull(restaurant, "the restaurant should never be null");
+        assertEquals("1234567890",
+                     restaurant.getNumber(), "the merchant number is wrong");
+        assertEquals("AppleBees", restaurant.getName(), "the name is wrong");
+        assertEquals(
+            Percentage.valueOf("8%"), restaurant.getBenefitPercentage(), "the benefitPercentage is wrong");
+        assertEquals(
+            AlwaysAvailable.INSTANCE,
+            restaurant.getBenefitAvailabilityPolicy(), "the benefit availability policy is wrong");
+    }
 }

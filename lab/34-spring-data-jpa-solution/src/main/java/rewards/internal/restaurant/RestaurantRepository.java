@@ -10,12 +10,13 @@ import org.springframework.data.repository.Repository;
  * Objects returned by this repository are guaranteed to be
  * fully-initialized and ready to use.
  */
-public interface RestaurantRepository extends Repository<Restaurant,Long> {
+public interface RestaurantRepository extends Repository<Restaurant, Long> {
 
-	/**
-	 * Load a Restaurant entity by its merchant number.
-	 * @param merchantNumber the merchant number
-	 * @return the restaurant
-	 */
-	public Restaurant findByNumber(String merchantNumber);
+    /**
+     * Load a Restaurant entity by its merchant number.
+     *
+     * @param merchantNumber the merchant number
+     * @return the restaurant
+     */
+    public Restaurant findByNumber(String merchantNumber);
 }

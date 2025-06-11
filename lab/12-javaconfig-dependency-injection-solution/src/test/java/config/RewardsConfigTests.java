@@ -25,47 +25,46 @@ import rewards.internal.reward.RewardRepository;
  * beans.
  */
 public class RewardsConfigTests {
-	// Provide a mock for testing
-	private DataSource dataSource = Mockito.mock(DataSource.class);
 
-	private RewardsConfig rewardsConfig = new RewardsConfig(dataSource);
+    // Provide a mock for testing
+    private DataSource dataSource = Mockito.mock(DataSource.class);
 
-	@Test
-	public void getBeans() {
-		RewardNetwork rewardNetwork = rewardsConfig.rewardNetwork();
-		assertTrue(rewardNetwork instanceof RewardNetworkImpl);
+    private RewardsConfig rewardsConfig = new RewardsConfig(dataSource);
 
-		AccountRepository accountRepository = rewardsConfig.accountRepository();
-		assertTrue(accountRepository instanceof JdbcAccountRepository);
-		checkDataSource(accountRepository);
+    @Test
+    public void getBeans() {
+        RewardNetwork rewardNetwork = rewardsConfig.rewardNetwork();
+        assertTrue(rewardNetwork instanceof RewardNetworkImpl);
 
-		RestaurantRepository restaurantRepository = rewardsConfig.restaurantRepository();
-		assertTrue(restaurantRepository instanceof JdbcRestaurantRepository);
-		checkDataSource(restaurantRepository);
+        AccountRepository accountRepository = rewardsConfig.accountRepository();
+        assertTrue(accountRepository instanceof JdbcAccountRepository);
+        checkDataSource(accountRepository);
 
-		RewardRepository rewardsRepository = rewardsConfig.rewardRepository();
-		assertTrue(rewardsRepository instanceof JdbcRewardRepository);
-		checkDataSource(rewardsRepository);
-	}
+        RestaurantRepository restaurantRepository = rewardsConfig.restaurantRepository();
+        assertTrue(restaurantRepository instanceof JdbcRestaurantRepository);
+        checkDataSource(restaurantRepository);
 
-	/**
-	 * Ensure the data-source is set for the repository. Uses reflection as we do
-	 * not wish to provide a getDataSource() method.
-	 * 
-	 * @param repository
-	 */
-	private void checkDataSource(Object repository) {
-		Class<? extends Object> repositoryClass = repository.getClass();
+        RewardRepository rewardsRepository = rewardsConfig.rewardRepository();
+        assertTrue(rewardsRepository instanceof JdbcRewardRepository);
+        checkDataSource(rewardsRepository);
+    }
 
-		try {
-			Field dataSource = repositoryClass.getDeclaredField("dataSource");
-			dataSource.setAccessible(true);
-			assertNotNull(dataSource.get(repository));
-		} catch (Exception e) {
-			String failureMessage = "Unable to validate dataSource in " + repositoryClass.getSimpleName();
-			System.out.println(failureMessage);
-			e.printStackTrace();
-			Fail.fail(failureMessage);
-		}
-	}
+    /**
+     * Ensure the data-source is set for the repository. Uses reflection as we do
+     * not wish to provide a getDataSource() method.
+     */
+    private void checkDataSource(Object repository) {
+        Class<? extends Object> repositoryClass = repository.getClass();
+
+        try {
+            Field dataSource = repositoryClass.getDeclaredField("dataSource");
+            dataSource.setAccessible(true);
+            assertNotNull(dataSource.get(repository));
+        } catch (Exception e) {
+            String failureMessage = "Unable to validate dataSource in " + repositoryClass.getSimpleName();
+            System.out.println(failureMessage);
+            e.printStackTrace();
+            Fail.fail(failureMessage);
+        }
+    }
 }

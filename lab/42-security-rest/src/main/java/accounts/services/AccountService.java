@@ -1,11 +1,11 @@
 package accounts.services;
 
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.stereotype.Service;
-
 import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.stereotype.Service;
 
 @Service
 public class AccountService {
@@ -36,11 +36,10 @@ public class AccountService {
         //   http://localhost:8080/authorities?username=<username>
         // - Verify that roles of the logged-in user get displayed
         Collection<? extends GrantedAuthority> grantedAuthorities
-                = null; // Modify this line
+            = null; // Modify this line
 
         return grantedAuthorities.stream()
                                  .map(GrantedAuthority::getAuthority)
                                  .collect(Collectors.toList());
     }
-
 }
