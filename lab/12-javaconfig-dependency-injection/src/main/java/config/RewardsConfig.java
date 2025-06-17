@@ -2,6 +2,18 @@ package config;
 
 import javax.sql.DataSource;
 
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+
+import rewards.RewardNetwork;
+import rewards.internal.RewardNetworkImpl;
+import rewards.internal.account.AccountRepository;
+import rewards.internal.account.JdbcAccountRepository;
+import rewards.internal.restaurant.JdbcRestaurantRepository;
+import rewards.internal.restaurant.RestaurantRepository;
+import rewards.internal.reward.JdbcRewardRepository;
+import rewards.internal.reward.RewardRepository;
+
 /**
  * TODO-00: In this lab, you are going to exercise the following:
  * - Creating Spring configuration class
@@ -42,8 +54,43 @@ import javax.sql.DataSource;
  *   not an implementation.
  */
 
+@Configuration
 public class RewardsConfig {
 
     // Set this by adding a constructor.
     private DataSource dataSource;
+
+    public RewardsConfig(DataSource dataSource) {
+        this.dataSource = dataSource;
+    }
+
+    @Bean
+    public AccountRepository accountRepository() {
+        final var repo = new JdbcAccountRepository();
+        repo.setDataSource(dataSource);
+        return repo;
+    }
+
+    @Bean
+    public RestaurantRepository restaurantRepository() {
+        final var repo = new JdbcRestaurantRepository();
+        repo.setDataSource(dataSource);
+        return repo;
+    }
+
+    @Bean
+    public RewardRepository rewardRepository() {
+        final var repo = new JdbcRewardRepository();
+        repo.setDataSource(dataSource);
+        return repo;
+    }
+
+    @Bean
+    public RewardNetwork rewardNetwork(
+        AccountRepository accountRepository,
+        RestaurantRepository restaurantRepository,
+        RewardRepository rewardRepository
+    ) {
+        return new RewardNetworkImpl(accountRepository, restaurantRepository, rewardRepository);
+    }
 }
