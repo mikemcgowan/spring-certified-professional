@@ -1,5 +1,7 @@
 package rewards.internal;
 
+import org.springframework.stereotype.Service;
+
 import common.money.MonetaryAmount;
 import rewards.AccountContribution;
 import rewards.Dining;
@@ -30,13 +32,12 @@ import rewards.internal.reward.RewardRepository;
  *   injection or constructor injection.
  */
 
+@Service
 public class RewardNetworkImpl implements RewardNetwork {
 
-    private AccountRepository accountRepository;
-
-    private RestaurantRepository restaurantRepository;
-
-    private RewardRepository rewardRepository;
+    private final AccountRepository accountRepository;
+    private final RestaurantRepository restaurantRepository;
+    private final RewardRepository rewardRepository;
 
     /**
      * Creates a new reward network.
@@ -45,9 +46,10 @@ public class RewardNetworkImpl implements RewardNetwork {
      * @param restaurantRepository the repository for loading restaurants that determine how much to reward
      * @param rewardRepository the repository for recording a record of successful reward transactions
      */
-
-    public RewardNetworkImpl(AccountRepository accountRepository, RestaurantRepository restaurantRepository,
-                             RewardRepository rewardRepository) {
+    public RewardNetworkImpl(
+        AccountRepository accountRepository,
+        RestaurantRepository restaurantRepository,
+        RewardRepository rewardRepository) {
         this.accountRepository = accountRepository;
         this.restaurantRepository = restaurantRepository;
         this.rewardRepository = rewardRepository;
