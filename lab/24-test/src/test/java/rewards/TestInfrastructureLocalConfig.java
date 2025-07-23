@@ -4,6 +4,7 @@ import javax.sql.DataSource;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
 
 /* TODO-05: Update this configuration class so that its
@@ -17,6 +18,7 @@ public class TestInfrastructureLocalConfig {
      * with test data for fast testing
      */
     @Bean
+    @Profile("local")
     public DataSource dataSource() {
         return
             (new EmbeddedDatabaseBuilder())
