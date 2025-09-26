@@ -8,6 +8,8 @@ import java.sql.SQLException;
 import javax.sql.DataSource;
 
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 
 import common.money.Percentage;
 import rewards.Dining;
@@ -40,10 +42,12 @@ import rewards.internal.account.Account;
 
 public class JdbcRestaurantRepository implements RestaurantRepository {
 
+    private JdbcTemplate jdbcTemplate;
     private DataSource dataSource;
 
     public JdbcRestaurantRepository(DataSource dataSource) {
         this.dataSource = dataSource;
+        this.jdbcTemplate = new JdbcTemplate(dataSource);
     }
 
     public Restaurant findByMerchantNumber(String merchantNumber) {
@@ -51,6 +55,12 @@ public class JdbcRestaurantRepository implements RestaurantRepository {
                      + " from T_RESTAURANT where MERCHANT_NUMBER = ?";
         Restaurant restaurant = null;
 
+        restaurant = jdbcTemplate.queryForObject(
+            sql,
+            (rs, rowNum) -> mapRestaurant(rs),
+            merchantNumber);
+
+        /*
         try (Connection conn = dataSource.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, merchantNumber);
@@ -60,6 +70,7 @@ public class JdbcRestaurantRepository implements RestaurantRepository {
         } catch (SQLException e) {
             throw new RuntimeException("SQL exception occurred finding by merchant number", e);
         }
+        */
 
         return restaurant;
     }
