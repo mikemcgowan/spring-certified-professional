@@ -1,15 +1,10 @@
 package rewards.internal.restaurant;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import javax.sql.DataSource;
-
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.RowMapper;
 
 import common.money.Percentage;
 import rewards.Dining;
@@ -42,12 +37,10 @@ import rewards.internal.account.Account;
 
 public class JdbcRestaurantRepository implements RestaurantRepository {
 
-    private JdbcTemplate jdbcTemplate;
-    private DataSource dataSource;
+    private final JdbcTemplate jdbcTemplate;
 
-    public JdbcRestaurantRepository(DataSource dataSource) {
-        this.dataSource = dataSource;
-        this.jdbcTemplate = new JdbcTemplate(dataSource);
+    public JdbcRestaurantRepository(JdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
     }
 
     public Restaurant findByMerchantNumber(String merchantNumber) {

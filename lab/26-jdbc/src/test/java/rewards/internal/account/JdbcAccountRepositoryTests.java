@@ -13,6 +13,7 @@ import javax.sql.DataSource;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
 
 import common.money.MonetaryAmount;
@@ -31,7 +32,7 @@ public class JdbcAccountRepositoryTests {
     @BeforeEach
     public void setUp() throws Exception {
         dataSource = createTestDataSource();
-        repository = new JdbcAccountRepository(dataSource);
+        repository = new JdbcAccountRepository(new JdbcTemplate(dataSource));
     }
 
     @Test

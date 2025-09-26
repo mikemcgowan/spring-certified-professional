@@ -13,13 +13,10 @@ import common.money.MonetaryAmount;
  */
 public class Dining {
 
-    private MonetaryAmount amount;
-
-    private String creditCardNumber;
-
-    private String merchantNumber;
-
-    private SimpleDate date;
+    private final MonetaryAmount amount;
+    private final String creditCardNumber;
+    private final String merchantNumber;
+    private final SimpleDate date;
 
     /**
      * Creates a new dining, reflecting an amount that was charged to a card by a merchant on the date specified.

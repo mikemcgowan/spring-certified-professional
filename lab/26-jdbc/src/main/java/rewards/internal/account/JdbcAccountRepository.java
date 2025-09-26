@@ -1,11 +1,7 @@
 package rewards.internal.account;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-
-import javax.sql.DataSource;
 
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -30,12 +26,10 @@ import common.money.Percentage;
 //   object using the given DataSource object.
 public class JdbcAccountRepository implements AccountRepository {
 
-    private DataSource dataSource;
-    private JdbcTemplate  jdbcTemplate;
+    private final JdbcTemplate jdbcTemplate;
 
-    public JdbcAccountRepository(DataSource dataSource) {
-        this.dataSource = dataSource;
-        this.jdbcTemplate = new JdbcTemplate(dataSource);
+    public JdbcAccountRepository(JdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
     }
 
     // TODO-07 (Optional): Refactor this method using JdbcTemplate and ResultSetExtractor
@@ -53,6 +47,11 @@ public class JdbcAccountRepository implements AccountRepository {
                      "on a.ID = b.ACCOUNT_ID " +
                      "where c.ACCOUNT_ID = a.ID and c.NUMBER = ?";
 
+        return jdbcTemplate.query(sql, (rs) -> {
+            return mapAccount(rs);
+        }, creditCardNumber);
+
+        /*
         Account account = null;
         Connection conn = null;
         PreparedStatement ps = null;
@@ -89,6 +88,7 @@ public class JdbcAccountRepository implements AccountRepository {
             }
         }
         return account;
+        */
     }
 
     // TODO-06: Refactor this method to use JdbcTemplate.

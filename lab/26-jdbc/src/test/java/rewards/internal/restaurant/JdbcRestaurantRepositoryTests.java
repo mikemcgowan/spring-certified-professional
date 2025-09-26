@@ -9,6 +9,7 @@ import javax.sql.DataSource;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
 
 import common.money.Percentage;
@@ -23,7 +24,7 @@ public class JdbcRestaurantRepositoryTests {
 
     @BeforeEach
     public void setUp() throws Exception {
-        repository = new JdbcRestaurantRepository(createTestDataSource());
+        repository = new JdbcRestaurantRepository(new JdbcTemplate(createTestDataSource()));
     }
 
     @Test

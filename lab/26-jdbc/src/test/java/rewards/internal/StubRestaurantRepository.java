@@ -22,7 +22,7 @@ import rewards.internal.restaurant.RestaurantRepository;
  */
 public class StubRestaurantRepository implements RestaurantRepository {
 
-    private Map<String, Restaurant> restaurantsByMerchantNumber = new HashMap<String, Restaurant>();
+    private final Map<String, Restaurant> restaurantsByMerchantNumber = new HashMap<String, Restaurant>();
 
     public StubRestaurantRepository() {
         Restaurant restaurant = new Restaurant("1234567890", "Apple Bees");

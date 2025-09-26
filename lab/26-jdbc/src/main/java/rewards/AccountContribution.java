@@ -12,11 +12,9 @@ import common.money.Percentage;
  */
 public class AccountContribution {
 
-    private String accountNumber;
-
-    private MonetaryAmount amount;
-
-    private Set<Distribution> distributions;
+    private final String accountNumber;
+    private final MonetaryAmount amount;
+    private final Set<Distribution> distributions;
 
     /**
      * Creates a new account contribution.
@@ -81,13 +79,10 @@ public class AccountContribution {
      */
     public static class Distribution {
 
-        private String beneficiary;
-
-        private MonetaryAmount amount;
-
-        private Percentage percentage;
-
-        private MonetaryAmount totalSavings;
+        private final String beneficiary;
+        private final MonetaryAmount amount;
+        private final Percentage percentage;
+        private final MonetaryAmount totalSavings;
 
         /**
          * Creates a new distribution.
